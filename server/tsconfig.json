@@ -36,6 +36,7 @@
       "@routes/*": ["src/routes/*"],
       "@models/*": ["src/models/*"],
       "@controllers/*": ["src/controllers/*"],
+      "@scrapper/*": ["src/scrapper/*"],
       "@/*": ["src/*"]
     },
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
