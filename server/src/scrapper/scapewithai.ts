@@ -1,4 +1,3 @@
-
 // go to https://weworkremotely.com/categories/remote-full-stack-programming-jobs#job-listings
 // scrape todays joblisting detail and the href to that job details in an array
 // loop over all the post
@@ -31,8 +30,6 @@ import puppetter from "puppeteer";
 //   }
 // };
 
-
-
 const getSpecificDOM = async (url: string) => {
   const browser = await puppetter.launch({ headless: false });
   const page = await browser.newPage();
@@ -44,26 +41,44 @@ const getSpecificDOM = async (url: string) => {
     // Extract specific elements: body > div, body > main, or body > section
     const specificDOM = await page.evaluate(() => {
       // Remove unwanted elements (navbar, scripts, etc.)
-      const unwantedSelectors = ['nav', 'script', 'footer', 'style', 'img', 'header','link'];
+      const unwantedSelectors = [
+        "nav",
+        "script",
+        "footer",
+        "style",
+        "img",
+        "header",
+        "link",
+      ];
 
       // Remove unwanted elements from the DOM
-      unwantedSelectors.forEach(selector => {
+      unwantedSelectors.forEach((selector) => {
         const elements = document.querySelectorAll(selector);
-        elements.forEach(el => el.remove());
+        elements.forEach((el) => el.remove());
       });
 
       // More selective attribute removal
-      const elementsToClean = document.querySelectorAll('body *');
-      elementsToClean.forEach(el => {
+      const elementsToClean = document.querySelectorAll("body *");
+      elementsToClean.forEach((el) => {
         // Only remove specific attributes that are likely to be unnecessary
-        const attributesToRemove = ['class', 'id', 'style','loading','alt', 'data-*', 'aria-*'];
+        const attributesToRemove = [
+          "class",
+          "id",
+          "style",
+          "loading",
+          "alt",
+          "data-*",
+          "aria-*",
+        ];
 
-        attributesToRemove.forEach(attr => {
-          if (attr.includes('*')) {
+        attributesToRemove.forEach((attr) => {
+          if (attr.includes("*")) {
             // Handle wildcard attributes (like data-* and aria-*)
             Array.from(el.attributes)
-              .filter(attribute => attribute.name.startsWith(attr.replace('*', '')))
-              .forEach(attribute => el.removeAttribute(attribute.name));
+              .filter((attribute) =>
+                attribute.name.startsWith(attr.replace("*", "")),
+              )
+              .forEach((attribute) => el.removeAttribute(attribute.name));
           } else {
             // Remove specific attributes
             el.removeAttribute(attr);
@@ -73,16 +88,21 @@ const getSpecificDOM = async (url: string) => {
 
       // Select the desired elements and return the cleaned HTML
       const selectors = ["body > div", "body > main", "body > section"];
-      return selectors
-        .map(selector => {
+      const selectedDom: string = selectors
+        .map((selector) => {
           const element = document.querySelector(selector);
           return element ? element.outerHTML : null;
         })
         .filter(Boolean)
         .join("\n");
+      return selectedDom;
+      // let filteredDom = selectedDom.replaceAll("<div>", "");
+      // filteredDom = filteredDom.replaceAll("</div>", "");
+      // filteredDom = filteredDom.replaceAll("<span>", "");
+      // filteredDom = filteredDom.replaceAll("</span>", "");
+      // return filteredDom;
     });
 
-    console.log(specificDOM); // Print specific DOM content
     return specificDOM;
   } catch (error) {
     console.error("Error fetching specific DOM:", error);
