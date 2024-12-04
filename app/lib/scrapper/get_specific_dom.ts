@@ -14,6 +14,7 @@ export const getFilteredDOM = async (url: string): Promise<string | null> => {
       const unwantedSelectors = [
         "nav",
         "script",
+        "noscript",
         "footer",
         "style",
         "img",
@@ -21,6 +22,7 @@ export const getFilteredDOM = async (url: string): Promise<string | null> => {
         "link",
       ];
 
+      console.log("innertext", document.querySelector("body")?.innerText);
       // Remove unwanted elements from the DOM
       unwantedSelectors.forEach((selector) => {
         document.querySelectorAll(selector).forEach((el) => el.remove());

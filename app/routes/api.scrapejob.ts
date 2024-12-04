@@ -11,29 +11,39 @@
 import { ActionFunction } from "@remix-run/node";
 import { getFilteredDOM } from "~/lib/scrapper";
 
-export const action: ActionFunction = async ({ request }) => {
-  console.log({ request });
-  const jobListUrls: string[] = [
-    "https://weworkremotely.com/categories/remote-full-stack-programming-jobs#job-listings",
+export const action: ActionFunction = async () => {
+  const jobLists: { url: string; title: string }[] = [
+    {
+      title: "remote-full-stack-programming-jobs",
+      url: "https://weworkremotely.com/categories/remote-full-stack-programming-jobs",
+    },
+    {
+      title: "remote-front-end-programming-jobs",
+      url: "https://weworkremotely.com/categories/remote-front-end-programming-jobs",
+    },
+    {
+      title: "remote-back-end-programming-jobs",
+      url: "https://weworkremotely.com/categories/remote-back-end-programming-jobs",
+    },
   ];
 
   try {
     // Use Promise.all to fetch all URLs concurrently and return their results.
     const results = await Promise.all(
-      jobListUrls.map(async (jobUrl) => {
-        const dom = await getFilteredDOM(jobUrl);
-        return { url: jobUrl, dom: dom || null };
+      jobLists.map(async (job: { url: string; title: string }) => {
+        const dom = await getFilteredDOM(job.url);
+        return { url: job.url, jobTitle: job.title, dom: dom || null };
       })
     );
 
-    return new Response(JSON.stringify({ results }), {
+    return new Response(JSON.stringify({ err: null, results }), {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
     console.error("Error processing job URLs:", error);
-    return new Response(
-      JSON.stringify({ error: "Failed to process job URLs" }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ err: "Failed to process job URLs" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 };
