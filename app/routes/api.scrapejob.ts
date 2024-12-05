@@ -9,33 +9,45 @@
 // save the details in db and scrape next
 
 import { ActionFunction } from "@remix-run/node";
-import { getFilteredDOM } from "~/lib/scrapper";
+import { getFilteredDOM, getJobListings } from "~/lib/scrapper";
 
 export const action: ActionFunction = async () => {
+  // const jobLists: { url: string; title: string }[] = [
+  //   {
+  //     title: "remote-full-stack-programming-jobs",
+  //     url: "https://weworkremotely.com/categories/remote-full-stack-programming-jobs",
+  //   },
+  //   {
+  //     title: "remote-front-end-programming-jobs",
+  //     url: "https://weworkremotely.com/categories/remote-front-end-programming-jobs",
+  //   },
+  //   {
+  //     title: "remote-back-end-programming-jobs",
+  //     url: "https://weworkremotely.com/categories/remote-back-end-programming-jobs",
+  //   },
+  // ];
   const jobLists: { url: string; title: string }[] = [
     {
       title: "remote-full-stack-programming-jobs",
       url: "https://weworkremotely.com/categories/remote-full-stack-programming-jobs",
     },
-    {
-      title: "remote-front-end-programming-jobs",
-      url: "https://weworkremotely.com/categories/remote-front-end-programming-jobs",
-    },
-    {
-      title: "remote-back-end-programming-jobs",
-      url: "https://weworkremotely.com/categories/remote-back-end-programming-jobs",
-    },
   ];
-
   try {
     // Use Promise.all to fetch all URLs concurrently and return their results.
     const results = await Promise.all(
       jobLists.map(async (job: { url: string; title: string }) => {
         const dom = await getFilteredDOM(job.url);
+        if (dom) {
+          const jobLists: {
+            title: string;
+            url: string;
+            posted_time: string;
+          }[] = await getJobListings(dom);
+          console.log(jobLists);
+        }
         return { url: job.url, jobTitle: job.title, dom: dom || null };
       })
     );
-
     return new Response(JSON.stringify({ err: null, results }), {
       headers: { "Content-Type": "application/json" },
     });
