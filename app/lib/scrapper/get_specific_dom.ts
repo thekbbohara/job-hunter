@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
 
 export const getFilteredDOM = async (url: string): Promise<string | null> => {
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
 
   try {
@@ -22,7 +22,7 @@ export const getFilteredDOM = async (url: string): Promise<string | null> => {
         "link",
       ];
 
-      console.log("innertext", document.querySelector("body")?.innerText);
+      // console.log("innertext", document.querySelector("body")?.innerText);
       // Remove unwanted elements from the DOM
       unwantedSelectors.forEach((selector) => {
         document.querySelectorAll(selector).forEach((el) => el.remove());
@@ -69,3 +69,9 @@ export const getFilteredDOM = async (url: string): Promise<string | null> => {
     await browser.close();
   }
 };
+
+console.log(
+  getFilteredDOM(
+    "https://weworkremotely.com/categories/remote-full-stack-programming-jobs#job-listings"
+  )
+);
