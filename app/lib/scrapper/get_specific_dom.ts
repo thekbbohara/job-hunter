@@ -69,9 +69,9 @@ export const getFilteredDOM = async (url: string): Promise<string | null> => {
     await browser.close();
   }
 };
-
-console.log(
-  getFilteredDOM(
-    "https://weworkremotely.com/categories/remote-full-stack-programming-jobs#job-listings"
-  )
-);
+//
+// console.log(
+//   getFilteredDOM(
+//     "https://weworkremotely.com/categories/remote-full-stack-programming-jobs#job-listings"
+//   )
+// );
