@@ -12,24 +12,18 @@ import { ActionFunction } from "@remix-run/node";
 import { getFilteredDOM, getJobListings } from "~/lib/scrapper";
 
 export const action: ActionFunction = async () => {
-  // const jobLists: { url: string; title: string }[] = [
-  //   {
-  //     title: "remote-full-stack-programming-jobs",
-  //     url: "https://weworkremotely.com/categories/remote-full-stack-programming-jobs",
-  //   },
-  //   {
-  //     title: "remote-front-end-programming-jobs",
-  //     url: "https://weworkremotely.com/categories/remote-front-end-programming-jobs",
-  //   },
-  //   {
-  //     title: "remote-back-end-programming-jobs",
-  //     url: "https://weworkremotely.com/categories/remote-back-end-programming-jobs",
-  //   },
-  // ];
   const jobLists: { url: string; title: string }[] = [
     {
       title: "remote-full-stack-programming-jobs",
       url: "https://weworkremotely.com/categories/remote-full-stack-programming-jobs",
+    },
+    {
+      title: "remote-front-end-programming-jobs",
+      url: "https://weworkremotely.com/categories/remote-front-end-programming-jobs",
+    },
+    {
+      title: "remote-back-end-programming-jobs",
+      url: "https://weworkremotely.com/categories/remote-back-end-programming-jobs",
     },
   ];
   try {
@@ -39,7 +33,7 @@ export const action: ActionFunction = async () => {
         const dom = await getFilteredDOM(job.url);
         if (dom) {
           const jobLists: {
-            title: string;
+            job_title: string;
             url: string;
             posted_time: string;
           }[] = await getJobListings(dom);
